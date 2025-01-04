@@ -1,5 +1,5 @@
 import puppeteer, { Page } from "puppeteer";
-import { baseUrl, email, password } from "./config";
+import { baseUrl, email, password, isCI } from "./config";
 import { login, goToReservations } from "./services/auth";
 import {
   makeReservation,
@@ -38,9 +38,9 @@ async function processReservations(
 
 async function main() {
   const browser = await puppeteer.launch({
-    headless: process.env.CI ? true : false,
-    slowMo: process.env.CI ? 0 : 50,
-    args: process.env.CI ? ["--no-sandbox", "--disable-setuid-sandbox"] : [],
+    headless: isCI,
+    slowMo: isCI ? 0 : 50,
+    args: isCI ? ["--no-sandbox", "--disable-setuid-sandbox"] : [],
   });
 
   const page = await browser.newPage();
