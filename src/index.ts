@@ -40,15 +40,30 @@ async function main() {
   const browser = await puppeteer.launch({
     headless: isCI,
     slowMo: isCI ? 0 : 50,
-    args: isCI ? ["--no-sandbox", "--disable-setuid-sandbox"] : [],
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-web-security",
+      "--disable-features=IsolateOrigins,site-per-process",
+      "--window-size=1920,1080",
+    ],
   });
 
   const page = await browser.newPage();
-  await page.setViewport({ width: 1080, height: 1024 });
 
   try {
+    await page.setViewport({ width: 1280, height: 720 });
+    await page.setUserAgent(
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    );
+
+    console.log("Navigating to login page...");
     await login(page, baseUrl, email, password);
+
+    console.log("Navigating to reservations page...");
     await goToReservations(page);
+
+    console.log("Processing reservations...");
     await processReservations(page, RESERVATIONS_PREFERENCES);
   } catch (error) {
     console.error(

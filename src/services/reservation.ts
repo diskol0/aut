@@ -13,8 +13,9 @@ export function getReservationKey(time: string): string {
 }
 
 export async function goToNextDay(page: Page): Promise<void> {
+  await page.waitForSelector("a.next");
   await page.click("a.next");
-  await page.waitForResponse((response) => response.status() === 200);
+  await page.waitForNetworkIdle();
 }
 
 export async function getWeekDayFromUrl(page: Page): Promise<string> {
@@ -79,12 +80,12 @@ export async function makeReservation(
   switch (state) {
     case "Entrenar":
       await reservationButton.click();
-      await page.waitForResponse((response) => response.status() === 200);
+      await page.waitForNetworkIdle();
       result.message = `${pageTitleText} - Booked at ${time}`;
       break;
     case "Avisar":
       await reservationButton.click();
-      await page.waitForResponse((response) => response.status() === 200);
+      await page.waitForNetworkIdle();
       result.message = `${pageTitleText} - In waiting list at ${time}`;
       break;
     case "Cambiar":

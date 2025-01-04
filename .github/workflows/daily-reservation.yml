@@ -31,7 +31,7 @@ jobs:
       - name: Install Puppeteer dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y chromium-browser
+          sudo apt-get install -y chromium-browser libgbm1
 
       - name: Run reservation script
         env:
