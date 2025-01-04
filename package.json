@@ -1,0 +1,23 @@
+{
+  "name": "autowod",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "pnpm with-env tsx src/index.ts",
+    "with-env": "dotenv -e .env --"
+  },
+  "keywords": [],
+  "author": "RubenGlez",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^23.11.1",
+    "tsx": "^4.19.2"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^8.0.0",
+    "@types/puppeteer": "^7.0.4",
+    "typescript": "^5.7.2"
+  }
+}
