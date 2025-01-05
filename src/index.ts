@@ -40,6 +40,13 @@ async function main() {
   const browser = await puppeteer.launch({
     headless: isCI,
     slowMo: isCI ? 0 : 50,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-web-security",
+      "--disable-features=IsolateOrigins,site-per-process",
+      "--window-size=1920,1080",
+    ],
   });
 
   try {

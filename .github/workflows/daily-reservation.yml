@@ -28,17 +28,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install Puppeteer dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y chromium-browser
-
       - name: Run reservation script
         env:
           BASE_URL: ${{ secrets.BASE_URL }}
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
-        run: pnpm start
+          TWO_CAPTCHA_API_KEY: ${{ secrets.TWO_CAPTCHA_API_KEY }}
+        run: pnpm test
 
       - name: Upload debug screenshots
         uses: actions/upload-artifact@v4
