@@ -1,4 +1,8 @@
 import { Page } from "puppeteer";
+import { Solver } from "@2captcha/captcha-solver";
+import { twoCaptchaApiKey } from "../config";
+
+const twoCaptchaSolver = new Solver(twoCaptchaApiKey);
 
 export async function login(
   page: Page,
@@ -6,17 +10,23 @@ export async function login(
   email: string,
   password: string
 ): Promise<void> {
-  await page.screenshot({
-    path: "debug-before-login.png",
-    fullPage: true,
-  });
-
   await page.goto(`${baseUrl}/account/login.aspx`);
 
-  await page.screenshot({
-    path: "debug-after-login.png",
-    fullPage: true,
+  // Extract sitekey from the page
+  const sitekey = await page.evaluate(() => {
+    const turnstileElement = document.querySelector(".cf-turnstile");
+    return turnstileElement?.getAttribute("data-sitekey") || "";
   });
+
+  if (sitekey) {
+    console.log("Found sitekey:", sitekey);
+
+    const res = await twoCaptchaSolver.cloudflareTurnstile({
+      pageurl: `${baseUrl}/account/login.aspx`,
+      sitekey: sitekey, // Use the extracted sitekey
+    });
+    console.log("Captcha solved", res);
+  }
 
   await page.type("#body_body_CtlLogin_IoEmail", email);
   await page.type("#body_body_CtlLogin_IoPassword", password);
