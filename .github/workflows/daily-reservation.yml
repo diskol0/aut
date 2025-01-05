@@ -31,7 +31,7 @@ jobs:
       - name: Install Puppeteer dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y chromium-browser libgbm1
+          sudo apt-get install -y chromium-browser
 
       - name: Run reservation script
         env:
@@ -39,3 +39,9 @@ jobs:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
         run: pnpm start
+
+      - name: Upload debug screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-screenshots
+          path: debug-*.png

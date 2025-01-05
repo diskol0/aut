@@ -6,12 +6,16 @@ export async function login(
   email: string,
   password: string
 ): Promise<void> {
+  await page.screenshot({
+    path: "debug-before-login.png",
+    fullPage: true,
+  });
+
   await page.goto(`${baseUrl}/account/login.aspx`);
 
-  // Wait specifically for the login form elements
-  await page.waitForSelector("#body_body_CtlLogin_IoEmail", { timeout: 10000 });
-  await page.waitForSelector("#body_body_CtlLogin_IoPassword", {
-    timeout: 10000,
+  await page.screenshot({
+    path: "debug-after-login.png",
+    fullPage: true,
   });
 
   await page.type("#body_body_CtlLogin_IoEmail", email);
@@ -21,9 +25,6 @@ export async function login(
   await page.waitForNavigation();
 
   // Don't remember this browser
-  await page.waitForSelector("#body_body_CtlConfiar_CtlNoSeguro", {
-    timeout: 10000,
-  });
   await page.click("#body_body_CtlConfiar_CtlNoSeguro");
 
   await page.waitForNetworkIdle();
