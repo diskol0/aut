@@ -28,16 +28,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install Puppeteer dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y chromium-browser
-
       - name: Run reservation script
         env:
           BASE_URL: ${{ secrets.BASE_URL }}
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
+          TWO_CAPTCHA_API_KEY: ${{ secrets.TWO_CAPTCHA_API_KEY }}
         run: pnpm start
 
       - name: Upload debug screenshots

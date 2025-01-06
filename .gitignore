@@ -1,3 +1,4 @@
 .env
 .DS_Store
 error-*.png
+node_modules
