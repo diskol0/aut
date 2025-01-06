@@ -1,5 +1,22 @@
 import { Page, ElementHandle } from "puppeteer";
-import { ButtonText, ReservationResult } from "../types";
+import {
+  ButtonText,
+  ReservationPreferences,
+  ReservationResult,
+  WeekDay,
+} from "../types";
+import { AVAILABLE_DAYS } from "../config";
+
+export async function goToReservations(page: Page): Promise<void> {
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  const todayInSeconds = Math.floor(today.getTime() / 1000);
+
+  const currentUrl = page.url();
+  const currentDomain = new URL(currentUrl).origin;
+
+  await page.goto(`${currentDomain}/athlete/reservas.aspx?t=${todayInSeconds}`);
+}
 
 export async function getReservationState(
   reservationButton: ElementHandle<HTMLButtonElement>
@@ -103,4 +120,20 @@ export async function makeReservation(
   }
 
   return result;
+}
+
+export async function processReservations(
+  page: Page,
+  preferences: ReservationPreferences
+): Promise<void> {
+  for (let i = 0; i < AVAILABLE_DAYS; i++) {
+    const weekDay = await getWeekDayFromUrl(page);
+    const time = preferences[weekDay as WeekDay];
+
+    const result = await makeReservation(page, time);
+    console.log(result.message);
+
+    const isLastDay = i === AVAILABLE_DAYS - 1;
+    if (!isLastDay) await goToNextDay(page);
+  }
 }

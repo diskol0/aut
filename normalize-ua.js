@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 
 const normalizeUserAgent = () => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve) => {
     try {
       let browser = await puppeteer.launch({
         headless: true,
