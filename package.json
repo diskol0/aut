@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "node index.js",
     "start": "tsx src/index.ts",
@@ -19,6 +18,7 @@
     "tsx": "^4.19.2"
   },
   "devDependencies": {
+    "@types/node": "^22.10.5",
     "@types/puppeteer": "^7.0.4",
     "dotenv-cli": "^8.0.0",
     "typescript": "^5.7.2"

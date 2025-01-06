@@ -6,8 +6,9 @@ import {
   isCI,
   RESERVATIONS_PREFERENCES,
 } from "./config";
-import { login, goToLoginPage } from "./services/auth";
+import { login } from "./services/auth";
 import { goToReservations, processReservations } from "./services/reservation";
+import { solveCaptchaFlow } from "./services/captcha";
 
 async function main() {
   const browser = await puppeteer.launch({
@@ -24,11 +25,9 @@ async function main() {
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     );
 
-    console.log("Navigating to login page...");
-    await goToLoginPage(page, baseUrl);
-
-    console.log("Resolving captcha...");
-    // TODO: Resolve captcha
+    console.log("Starting captcha flow...");
+    const loginUrl = `${baseUrl}/account/login.aspx`;
+    await solveCaptchaFlow(page, loginUrl);
 
     console.log("Logging in...");
     await login(page, email, password);
