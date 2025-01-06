@@ -44,6 +44,16 @@ export async function getWeekDayFromUrl(page: Page): Promise<string> {
     .toLocaleLowerCase();
 }
 
+export async function getDateFromUrl(page: Page): Promise<string> {
+  const url = await page.url();
+  const weekDayInSeconds = url.split("=")[1];
+  return Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(new Date(Number(weekDayInSeconds) * 1000));
+}
+
 export async function makeReservation(
   page: Page,
   time: string | null
@@ -56,7 +66,7 @@ export async function makeReservation(
   if (!time) {
     return {
       success: false,
-      message: `No time scheduled for ${weekDay}`,
+      message: `📅 No time scheduled for ${weekDay}s`,
       weekDay,
     };
   }
@@ -69,7 +79,9 @@ export async function makeReservation(
   if (!reservationButton) {
     return {
       success: false,
-      message: `No reservation button found for ${pageTitleText}`,
+      message: `🔍 No reservation slot found for ${await getDateFromUrl(
+        page
+      )} at ${time}`,
       weekDay,
       time,
     };
@@ -80,7 +92,9 @@ export async function makeReservation(
   if (!state) {
     return {
       success: false,
-      message: `No reservation state found for ${pageTitleText}`,
+      message: `⚠️ Unable to determine reservation status for ${await getDateFromUrl(
+        page
+      )} at ${time}`,
       weekDay,
       time,
     };
@@ -98,23 +112,23 @@ export async function makeReservation(
     case "Entrenar":
       await reservationButton.click();
       await page.waitForNetworkIdle();
-      result.message = `${pageTitleText} - Booked at ${time}`;
+      result.message = `✅ ${pageTitleText} - Successfully booked for ${time}! 💪`;
       break;
     case "Avisar":
       await reservationButton.click();
       await page.waitForNetworkIdle();
-      result.message = `${pageTitleText} - In waiting list at ${time}`;
+      result.message = `⏳ ${pageTitleText} - Added to waiting list for ${time}. Fingers crossed! 🤞`;
       break;
     case "Cambiar":
-      result.message = `${pageTitleText} - Already booked at a different time`;
+      result.message = `⚠️ ${pageTitleText} - You're already booked for a different time slot`;
       result.success = false;
       break;
     case "Finalizada":
-      result.message = `${pageTitleText} - Class already finished`;
+      result.message = `❌ ${pageTitleText} - This class has already finished`;
       result.success = false;
       break;
     case "Borrar":
-      result.message = `${pageTitleText} - Already booked at ${time}`;
+      result.message = `ℹ️ ${pageTitleText} - You're already booked for ${time}`;
       result.success = false;
       break;
   }

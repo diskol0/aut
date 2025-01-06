@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js",
     "start": "tsx src/index.ts",
     "dev": "pnpm with-env tsx src/index.ts",
     "with-env": "dotenv -e .env --"
