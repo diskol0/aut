@@ -1,11 +1,11 @@
-import { Page, ElementHandle } from "puppeteer";
+import { Page, ElementHandle } from 'puppeteer';
 import {
   ButtonText,
   ReservationPreferences,
   ReservationResult,
   WeekDay,
-} from "../types";
-import { AVAILABLE_DAYS } from "../config";
+} from '../types';
+import { availableDays } from '../config';
 
 export async function goToReservations(page: Page): Promise<void> {
   const today = new Date();
@@ -21,36 +21,36 @@ export async function goToReservations(page: Page): Promise<void> {
 export async function getReservationState(
   reservationButton: ElementHandle<HTMLButtonElement>
 ): Promise<ButtonText | null> {
-  const buttonText = await reservationButton.evaluate((el) => el.textContent);
+  const buttonText = await reservationButton.evaluate(el => el.textContent);
   return buttonText as ButtonText | null;
 }
 
 export function getReservationKey(time: string): string {
-  return `h${time.replace(":", "")}00`;
+  return `h${time.replace(':', '')}00`;
 }
 
 export async function goToNextDay(page: Page): Promise<void> {
-  await page.waitForSelector("a.next");
-  await page.click("a.next");
+  await page.waitForSelector('a.next');
+  await page.click('a.next');
   await page.waitForNetworkIdle();
 }
 
 export async function getWeekDayFromUrl(page: Page): Promise<string> {
   const url = await page.url();
-  const weekDayInSeconds = url.split("=")[1];
+  const weekDayInSeconds = url.split('=')[1];
   const weekDay = new Date(Number(weekDayInSeconds) * 1000);
   return weekDay
-    .toLocaleDateString("en-US", { weekday: "long" })
+    .toLocaleDateString('en-US', { weekday: 'long' })
     .toLocaleLowerCase();
 }
 
 export async function getDateFromUrl(page: Page): Promise<string> {
   const url = await page.url();
-  const weekDayInSeconds = url.split("=")[1];
-  return Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+  const weekDayInSeconds = url.split('=')[1];
+  return Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   }).format(new Date(Number(weekDayInSeconds) * 1000));
 }
 
@@ -59,9 +59,8 @@ export async function makeReservation(
   time: string | null
 ): Promise<ReservationResult> {
   const weekDay = await getWeekDayFromUrl(page);
-  const pageTitle = await page.$(".mainTitle");
-  const pageTitleText =
-    (await pageTitle?.evaluate((el) => el.textContent)) ?? "";
+  const pageTitle = await page.$('.mainTitle');
+  const pageTitleText = (await pageTitle?.evaluate(el => el.textContent)) ?? '';
 
   if (!time) {
     return {
@@ -102,33 +101,33 @@ export async function makeReservation(
 
   const result: ReservationResult = {
     success: true,
-    message: "",
+    message: '',
     weekDay,
     time,
     state,
   };
 
   switch (state) {
-    case "Entrenar":
+    case 'Entrenar':
       await reservationButton.click();
       await page.waitForNetworkIdle();
-      result.message = `✅ ${pageTitleText} - Successfully booked for ${time}! 💪`;
+      result.message = `✅ ${pageTitleText} - Successfully booked! 💪`;
       break;
-    case "Avisar":
+    case 'Avisar':
       await reservationButton.click();
       await page.waitForNetworkIdle();
-      result.message = `⏳ ${pageTitleText} - Added to waiting list for ${time}. Fingers crossed! 🤞`;
+      result.message = `⏳ ${pageTitleText} - Added to waiting list. Fingers crossed! 🤞`;
       break;
-    case "Cambiar":
+    case 'Cambiar':
       result.message = `⚠️ ${pageTitleText} - You're already booked for a different time slot`;
       result.success = false;
       break;
-    case "Finalizada":
+    case 'Finalizada':
       result.message = `❌ ${pageTitleText} - This class has already finished`;
       result.success = false;
       break;
-    case "Borrar":
-      result.message = `ℹ️ ${pageTitleText} - You're already booked for ${time}`;
+    case 'Borrar':
+      result.message = `ℹ️ ${pageTitleText} - You're already booked`;
       result.success = false;
       break;
   }
@@ -140,14 +139,14 @@ export async function processReservations(
   page: Page,
   preferences: ReservationPreferences
 ): Promise<void> {
-  for (let i = 0; i < AVAILABLE_DAYS; i++) {
+  for (let i = 0; i < availableDays; i++) {
     const weekDay = await getWeekDayFromUrl(page);
     const time = preferences[weekDay as WeekDay];
 
     const result = await makeReservation(page, time);
     console.log(result.message);
 
-    const isLastDay = i === AVAILABLE_DAYS - 1;
+    const isLastDay = i === availableDays - 1;
     if (!isLastDay) await goToNextDay(page);
   }
 }

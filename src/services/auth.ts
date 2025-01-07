@@ -1,4 +1,4 @@
-import { Page } from "puppeteer";
+import { Page } from 'puppeteer';
 
 export async function goToLoginPage(
   page: Page,
@@ -12,14 +12,14 @@ export async function login(
   email: string,
   password: string
 ): Promise<void> {
-  await page.type("#body_body_CtlLogin_IoEmail", email);
-  await page.type("#body_body_CtlLogin_IoPassword", password);
-  await page.click("#body_body_CtlLogin_CtlAceptar");
+  await page.type('#body_body_CtlLogin_IoEmail', email);
+  await page.type('#body_body_CtlLogin_IoPassword', password);
+  await page.click('#body_body_CtlLogin_CtlAceptar');
 
   await page.waitForNavigation();
 
   // click in "Don't remember this browser"
-  await page.click("#body_body_CtlConfiar_CtlNoSeguro");
+  await page.click('#body_body_CtlConfiar_CtlNoSeguro');
 
   await page.waitForNetworkIdle();
 }

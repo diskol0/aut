@@ -1,18 +1,18 @@
 export type ButtonText =
-  | "Borrar"
-  | "Finalizada"
-  | "Cambiar"
-  | "Entrenar"
-  | "Avisar";
+  | 'Borrar'
+  | 'Finalizada'
+  | 'Cambiar'
+  | 'Entrenar'
+  | 'Avisar';
 
 export type WeekDay =
-  | "monday"
-  | "tuesday"
-  | "wednesday"
-  | "thursday"
-  | "friday"
-  | "saturday"
-  | "sunday";
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday'
+  | 'sunday';
 
 export interface ReservationPreferences
   extends Record<WeekDay, string | null> {}

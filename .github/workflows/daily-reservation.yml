@@ -1,43 +1,66 @@
+# This workflow runs every day to book your workout sessions
 name: Daily Reservation
 
+# When does this run?
 on:
+  # Runs at 20:30 UTC (22:30/21:30 in Spain)
+  # - 22:30 (10:30 PM) during winter (CET/UTC+1)
+  # - 21:30 (9:30 PM) during summer (CEST/UTC+2)
   schedule:
-    # Runs at 22:30 (10:30 PM) in Spain (UTC+1 or UTC+2)
-    # Using 21:30 UTC during winter (CET) and 20:30 UTC during summer (CEST)
-    - cron: "30 20 * * *"
-  workflow_dispatch: # Allows manual trigger of the workflow
+    - cron: '30 20 * * *'
 
+  # Also allows you to run it manually from the Actions tab
+  workflow_dispatch:
+
+# The tasks to run
 jobs:
-  make-reservation:
+  book-session:
+    name: Book Workout Session
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      # Get a copy of your code
+      - name: 📥 Get latest code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      # Set up Node.js environment
+      - name: 🔧 Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20'
 
-      - name: Setup pnpm
+      # Install pnpm (package manager)
+      - name: 📦 Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: latest
 
-      - name: Install dependencies
+      # Install project dependencies
+      - name: 📚 Install dependencies
         run: pnpm install
 
-      - name: Run reservation script
+      # Run the booking script
+      - name: 🎯 Run booking script
         env:
-          BASE_URL: ${{ secrets.BASE_URL }}
+          # Authentication
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
-          TWO_CAPTCHA_API_KEY: ${{ secrets.TWO_CAPTCHA_API_KEY }}
-        run: pnpm start
 
-      - name: Upload debug screenshots
-        uses: actions/upload-artifact@v4
-        with:
-          name: debug-screenshots
-          path: debug-*.png
+          # Target Website
+          BASE_URL: ${{ secrets.BASE_URL }}
+
+          # 2Captcha API Key
+          TWO_CAPTCHA_API_KEY: ${{ secrets.TWO_CAPTCHA_API_KEY }}
+
+          # Schedule
+          MONDAY: ${{ secrets.MONDAY }}
+          TUESDAY: ${{ secrets.TUESDAY }}
+          WEDNESDAY: ${{ secrets.WEDNESDAY }}
+          THURSDAY: ${{ secrets.THURSDAY }}
+          FRIDAY: ${{ secrets.FRIDAY }}
+          SATURDAY: ${{ secrets.SATURDAY }}
+          SUNDAY: ${{ secrets.SUNDAY }}
+
+          # Configuration
+          AVAILABLE_DAYS: ${{ secrets.AVAILABLE_DAYS }}
+        run: pnpm start

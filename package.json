@@ -1,16 +1,43 @@
 {
   "name": "autowod",
   "version": "1.0.0",
-  "description": "",
+  "description": "An automated reservation system for workout sessions using Puppeteer and 2Captcha",
   "main": "index.js",
   "scripts": {
     "start": "tsx src/index.ts",
     "dev": "pnpm with-env tsx src/index.ts",
-    "with-env": "dotenv -e .env --"
+    "with-env": "dotenv -e .env --",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "test": "echo \"No tests specified yet\" && exit 0"
   },
-  "keywords": [],
-  "author": "RubenGlez",
+  "keywords": [
+    "automation",
+    "puppeteer",
+    "captcha",
+    "workout",
+    "reservation",
+    "typescript",
+    "bot"
+  ],
+  "author": {
+    "name": "RubenGlez",
+    "url": "https://github.com/RubenGlez"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RubenGlez/autowod.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RubenGlez/autowod/issues"
+  },
+  "homepage": "https://github.com/RubenGlez/autowod#readme",
   "license": "ISC",
+  "engines": {
+    "node": ">=16.0.0",
+    "pnpm": ">=8.0.0"
+  },
   "dependencies": {
     "@2captcha/captcha-solver": "^1.3.0",
     "puppeteer": "^23.11.1",
@@ -19,7 +46,13 @@
   "devDependencies": {
     "@types/node": "^22.10.5",
     "@types/puppeteer": "^7.0.4",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
     "dotenv-cli": "^8.0.0",
+    "eslint": "^8.0.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "prettier": "^3.0.0",
     "typescript": "^5.7.2"
   }
 }
