@@ -3,11 +3,11 @@ name: Daily Reservation
 
 # When does this run?
 on:
-  # Runs at 20:30 UTC (22:30/21:30 in Spain)
+  # Runs at 21:30 UTC (22:30/23:30 in Spain)
   # - 22:30 (10:30 PM) during winter (CET/UTC+1)
-  # - 21:30 (9:30 PM) during summer (CEST/UTC+2)
+  # - 23:30 (11:30 PM) during summer (CEST/UTC+2)
   schedule:
-    - cron: '30 20 * * *'
+    - cron: '30 21 * * *'
 
   # Also allows you to run it manually from the Actions tab
   workflow_dispatch:
