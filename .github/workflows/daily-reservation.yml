@@ -39,6 +39,12 @@ jobs:
       - name: 📚 Install dependencies
         run: pnpm install
 
+      # Install Puppeteer's browser - this is needed for puppeteer-core
+      - name: 🌐 Install Chrome for Puppeteer
+        run: |
+          pnpm add puppeteer -D
+          pnpm exec puppeteer browsers install chrome
+
       # Run the booking script
       - name: 🎯 Run booking script
         env:
