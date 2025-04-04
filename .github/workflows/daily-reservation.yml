@@ -7,7 +7,7 @@ on:
   # - 22:30 (10:30 PM) during winter (CET/UTC+1)
   # - 23:30 (11:30 PM) during summer (CEST/UTC+2)
   schedule:
-    - cron: '30 21 * * *'
+    - cron: '00 19 * * *'
 
   # Also allows you to run it manually from the Actions tab
   workflow_dispatch:
